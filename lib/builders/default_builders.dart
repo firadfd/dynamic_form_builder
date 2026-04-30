@@ -42,8 +42,8 @@ TextInputType _keyboardType(FieldType type) {
   }
 }
 
- Widget _textField(
-    FieldConfig config, DynamicFormController controller, DynamicFormTheme theme) {
+Widget _textField(FieldConfig config, DynamicFormController controller,
+    DynamicFormTheme theme) {
   final initial = controller.getValue(config.key) ?? config.initialValue;
   return Padding(
     padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
@@ -64,8 +64,8 @@ TextInputType _keyboardType(FieldType type) {
   );
 }
 
-Widget _passwordField(
-    FieldConfig config, DynamicFormController controller, DynamicFormTheme theme) {
+Widget _passwordField(FieldConfig config, DynamicFormController controller,
+    DynamicFormTheme theme) {
   return PasswordField(config: config, controller: controller, theme: theme);
 }
 
@@ -90,8 +90,8 @@ class _PasswordFieldState extends State<PasswordField> {
 
   @override
   Widget build(BuildContext context) {
-    final initial =
-        widget.controller.getValue(widget.config.key) ?? widget.config.initialValue;
+    final initial = widget.controller.getValue(widget.config.key) ??
+        widget.config.initialValue;
     return Padding(
       padding: widget.theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
       child: TextFormField(
@@ -119,7 +119,8 @@ class _PasswordFieldState extends State<PasswordField> {
   }
 }
 
-Widget _multilineField(FieldConfig config, DynamicFormController controller, DynamicFormTheme theme) {
+Widget _multilineField(FieldConfig config, DynamicFormController controller,
+    DynamicFormTheme theme) {
   final initial = controller.getValue(config.key) ?? config.initialValue;
   return Padding(
     padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
@@ -140,7 +141,8 @@ Widget _multilineField(FieldConfig config, DynamicFormController controller, Dyn
   );
 }
 
-Widget _dropdownField(FieldConfig config, DynamicFormController controller, DynamicFormTheme theme) {
+Widget _dropdownField(FieldConfig config, DynamicFormController controller,
+    DynamicFormTheme theme) {
   final current = controller.getValue(config.key);
   return Padding(
     padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
@@ -153,17 +155,21 @@ Widget _dropdownField(FieldConfig config, DynamicFormController controller, Dyna
               suffix: config.suffix)
           .copyWith(labelText: config.label, hintText: config.hint),
       items: config.options
-              ?.map((o) => DropdownMenuItem(value: o.value, child: Text(o.label)))
+              ?.map(
+                  (o) => DropdownMenuItem(value: o.value, child: Text(o.label)))
               .toList() ??
           [],
-      onChanged: config.enabled ? (v) => controller.setValue(config.key, v) : null,
+      onChanged:
+          config.enabled ? (v) => controller.setValue(config.key, v) : null,
       validator: _validatorFromConfig(config),
     ),
   );
 }
 
-Widget _checkboxField(FieldConfig config, DynamicFormController controller, DynamicFormTheme theme) {
-  final initial = controller.getValue(config.key) ?? config.initialValue ?? false;
+Widget _checkboxField(FieldConfig config, DynamicFormController controller,
+    DynamicFormTheme theme) {
+  final initial =
+      controller.getValue(config.key) ?? config.initialValue ?? false;
   return Padding(
     padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 8),
     child: FormField<bool>(
@@ -185,8 +191,10 @@ Widget _checkboxField(FieldConfig config, DynamicFormController controller, Dyna
   );
 }
 
-Widget _switchField(FieldConfig config, DynamicFormController controller, DynamicFormTheme theme) {
-  final initial = controller.getValue(config.key) ?? config.initialValue ?? false;
+Widget _switchField(FieldConfig config, DynamicFormController controller,
+    DynamicFormTheme theme) {
+  final initial =
+      controller.getValue(config.key) ?? config.initialValue ?? false;
   return Padding(
     padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 8),
     child: FormField<bool>(
@@ -210,9 +218,12 @@ Widget _switchField(FieldConfig config, DynamicFormController controller, Dynami
   );
 }
 
-Widget _dateField(FieldConfig config, DynamicFormController controller, DynamicFormTheme theme) {
+Widget _dateField(FieldConfig config, DynamicFormController controller,
+    DynamicFormTheme theme) {
   final stored = controller.getValue(config.key);
-  final date = stored is DateTime ? stored : (stored != null ? DateTime.tryParse(stored.toString()) : null);
+  final date = stored is DateTime
+      ? stored
+      : (stored != null ? DateTime.tryParse(stored.toString()) : null);
   final dateStr = date != null ? DateFormat.yMd().format(date) : '';
 
   return Padding(
@@ -248,9 +259,12 @@ Widget _dateField(FieldConfig config, DynamicFormController controller, DynamicF
   );
 }
 
-Widget _timeField(FieldConfig config, DynamicFormController controller, DynamicFormTheme theme) {
+Widget _timeField(FieldConfig config, DynamicFormController controller,
+    DynamicFormTheme theme) {
   final stored = controller.getValue(config.key);
-  final time = stored is TimeOfDay ? stored : (stored != null ? _tryParseTime(stored.toString()) : null);
+  final time = stored is TimeOfDay
+      ? stored
+      : (stored != null ? _tryParseTime(stored.toString()) : null);
   final timeStr = time != null ? time.format(ThemeProvider.context) : '';
 
   return Padding(

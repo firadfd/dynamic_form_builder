@@ -42,7 +42,8 @@ class _DynamicFormState extends State<DynamicForm> {
 
   void _initValues() {
     for (var field in widget.config) {
-      if (field.initialValue != null && _controller.getValue(field.key) == null) {
+      if (field.initialValue != null &&
+          _controller.getValue(field.key) == null) {
         _controller.setValue(field.key, field.initialValue);
       }
     }
