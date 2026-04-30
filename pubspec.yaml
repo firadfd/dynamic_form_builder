@@ -1,0 +1,22 @@
+name: dynamic_form_builder
+description: Build reactive Flutter forms from a dart map or JSON config with full UI customization.
+version: 1.0.0
+homepage: https://github.com/firadfd/dynamic_form_builder
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  lints: ^6.1.0
+
+flutter:
+  assets:
+    - assets/images/
