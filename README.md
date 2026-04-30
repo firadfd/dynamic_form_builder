@@ -1,6 +1,6 @@
-# dynamic_form_builder
+# dynamic_field_builder
 
-[![pub package](https://img.shields.io/pub/v/dynamic_form_builder.svg)](https://pub.dev/packages/dynamic_form_builder)
+[![pub package](https://img.shields.io/pub/v/dynamic_field_builder.svg)](https://pub.dev/packages/dynamic_field_builder)
 
 **Build beautiful, reactive Flutter forms from a Dart map or JSON config — with zero boilerplate and full UI control.**
 
@@ -29,7 +29,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dynamic_form_builder: ^1.0.0
+  dynamic_field_builder: ^1.0.0
 ```
 
 Then run `flutter pub get`.
@@ -39,7 +39,7 @@ Then run `flutter pub get`.
 ## 🏁 Quick start
 
 ```dart
-import 'package:dynamic_form_builder/dynamic_form_builder.dart';
+import 'package:dynamic_field_builder/dynamic_field_builder.dart';
 
 final config = [
   FieldConfig(

@@ -1,5 +1,5 @@
-name: dynamic_form_builder_example
-description: Demonstrates dynamic_form_builder usage.
+name: dynamic_field_builder_example
+description: Demonstrates dynamic_field_builder usage.
 publish_to: 'none'
 version: 1.0.0
 
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dynamic_form_builder:
+  dynamic_field_builder:
     path: ../
 
 dev_dependencies:

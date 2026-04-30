@@ -1,4 +1,4 @@
-library dynamic_form_builder;
+library dynamic_field_builder;
 
 export 'models/field_config.dart';
 export 'models/field_type.dart';

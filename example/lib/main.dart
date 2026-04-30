@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dynamic_form_builder/dynamic_form_builder.dart';
+import 'package:dynamic_field_builder/dynamic_field_builder.dart';
 
 void main() {
   runApp(const MyApp());
