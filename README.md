@@ -29,7 +29,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dynamic_field_builder: ^1.0.0
+  dynamic_field_builder: ^1.1.0
 ```
 
 Then run `flutter pub get`.
@@ -85,7 +85,8 @@ DynamicForm(
 | `label` / `hint`  | Display text                                                       |
 | `validation`      | Built‑in rules (`required`, `minLength`, `regex`, …)               |
 | `prefix` / `suffix`| Custom **Widgets** (Icons, Images, etc.) for the field             |
-| `activeColor`     | Custom color for Switch/Checkbox when active                      |
+| `activeColor`     | Custom color for Checkbox when active                             |
+| `activeThumbColor`| Custom color for Switch thumb when active                        |
 | `checkColor`      | Custom color for Checkbox tick                                     |
 | `options`         | For `dropdown` fields                                              |
 | `conditional`     | Show/hide based on other field value                               |
@@ -166,7 +167,7 @@ FieldConfig(
   type: FieldType.email,
   decorationProps: {
     'filled': true,
-    'fillColor': Colors.blue.withOpacity(0.1),
+    'fillColor': Colors.blue.withValues(alpha: 0.1),
     'focusedBorder': OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
   },
 )

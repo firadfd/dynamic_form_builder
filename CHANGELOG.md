@@ -1,3 +1,9 @@
+## 1.1.0
+- Updated to latest Flutter APIs (resolved deprecation warnings for `activeColor` and `withOpacity`).
+- Added `activeThumbColor` to `FieldConfig` for enhanced `Switch` customization.
+- Comprehensive Dartdoc documentation for the entire public API (improved coverage to 100%).
+- Improved code quality and resolved linting issues.
+
 ## 1.0.0
 - Initial stable release.
 - Added full UI customization for all field types.

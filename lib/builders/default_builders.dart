@@ -6,12 +6,14 @@ import '../controller/dynamic_form_controller.dart';
 import '../theme/dynamic_form_theme.dart';
 import '../utils/validators.dart';
 
+/// Signature for a function that builds a form field widget.
 typedef FieldBuilder = Widget Function(
   FieldConfig config,
   DynamicFormController controller,
   DynamicFormTheme theme,
 );
 
+/// The default set of field builders provided by the library.
 final Map<FieldType, FieldBuilder> defaultBuilders = {
   FieldType.text: _textField,
   FieldType.email: _textField,
@@ -69,17 +71,24 @@ Widget _passwordField(FieldConfig config, DynamicFormController controller,
   return PasswordField(config: config, controller: controller, theme: theme);
 }
 
+/// A specialized text field for password entry with a visibility toggle.
 class PasswordField extends StatefulWidget {
+  /// The field configuration.
   final FieldConfig config;
+
+  /// The form controller.
   final DynamicFormController controller;
+
+  /// The form theme.
   final DynamicFormTheme theme;
 
+  /// Creates a new [PasswordField] instance.
   const PasswordField({
-    Key? key,
+    super.key,
     required this.config,
     required this.controller,
     required this.theme,
-  }) : super(key: key);
+  });
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -201,8 +210,9 @@ Widget _switchField(FieldConfig config, DynamicFormController controller,
       initialValue: initial as bool,
       validator: _validatorFromConfig(config),
       builder: (field) => SwitchListTile(
-        activeColor: config.activeColor,
-        activeTrackColor: config.activeColor?.withOpacity(0.5),
+        activeThumbColor: config.activeThumbColor ?? config.activeColor,
+        activeTrackColor: (config.activeThumbColor ?? config.activeColor)
+            ?.withValues(alpha: 0.5),
         inactiveThumbColor: config.inactiveThumbColor,
         inactiveTrackColor: config.inactiveTrackColor,
         title: Text(config.label ?? ''),
@@ -310,9 +320,13 @@ TimeOfDay? _tryParseTime(String s) {
   return null;
 }
 
-/// Utility to provide a BuildContext globally for showing dialogs.
-/// Set this from your app's root widget.
+/// Utility to provide a BuildContext globally for showing dialogs and resolve themes.
+/// 
+/// Set [navigatorKey] in your [MaterialApp] or [CupertinoApp] to enable this.
 class ThemeProvider {
+  /// The global navigator key used to access the current [BuildContext].
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  /// Retrieves the current [BuildContext] from the [navigatorKey].
   static BuildContext get context => navigatorKey.currentContext!;
 }

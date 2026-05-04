@@ -5,17 +5,32 @@ import '../controller/dynamic_form_controller.dart';
 import '../theme/dynamic_form_theme.dart';
 import '../builders/default_builders.dart';
 
+/// The main widget for building a dynamic form based on a list of [FieldConfig].
 class DynamicForm extends StatefulWidget {
+  /// The list of field configurations defining the form structure.
   final List<FieldConfig> config;
+
+  /// Optional controller to manage form state and validation externally.
   final DynamicFormController? controller;
+
+  /// Optional theme to customize the appearance of the form and its fields.
   final DynamicFormTheme? theme;
+
+  /// Map of custom builders to handle custom field types or override default ones.
   final Map<String, FieldBuilder>? customBuilders;
+
+  /// Callback function triggered when the form is submitted and validation passes.
   final void Function(Map<String, dynamic> values)? onSubmit;
+
+  /// Optional wrapper widget to wrap the entire form.
   final Widget Function(Widget form)? wrapper;
+
+  /// Optional builder to provide a custom submit button.
   final Widget Function(VoidCallback onSubmit)? submitButtonBuilder;
 
+  /// Creates a new [DynamicForm] instance.
   const DynamicForm({
-    Key? key,
+    super.key,
     required this.config,
     this.controller,
     this.theme,
@@ -23,7 +38,7 @@ class DynamicForm extends StatefulWidget {
     this.onSubmit,
     this.wrapper,
     this.submitButtonBuilder,
-  }) : super(key: key);
+  });
 
   @override
   State<DynamicForm> createState() => _DynamicFormState();

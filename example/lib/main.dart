@@ -6,7 +6,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
 }
 
 class ExamplePage extends StatefulWidget {
-  const ExamplePage({Key? key}) : super(key: key);
+  const ExamplePage({super.key});
 
   @override
   State<ExamplePage> createState() => _ExamplePageState();
@@ -36,7 +36,7 @@ class _ExamplePageState extends State<ExamplePage> {
         prefix: const Icon(Icons.person_outline, color: Colors.blue),
         decorationProps: {
           'filled': true,
-          'fillColor': Colors.blue.withOpacity(0.05),
+          'fillColor': Colors.blue.withValues(alpha: 0.05),
           'border': OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: const BorderSide(color: Colors.blue, width: 2),
@@ -76,8 +76,8 @@ class _ExamplePageState extends State<ExamplePage> {
         type: FieldType.switch_,
         label: 'Enable notifications',
         initialValue: true,
-        activeColor: Colors.green,
-        inactiveTrackColor: Colors.red.withOpacity(0.3),
+        activeThumbColor: Colors.green,
+        inactiveTrackColor: Colors.red.withValues(alpha: 0.3),
         inactiveThumbColor: Colors.red),
     const FieldConfig(
         key: 'birthdate', type: FieldType.date, label: 'Birthdate'),

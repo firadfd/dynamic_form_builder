@@ -1,3 +1,4 @@
+/// A library for building reactive Flutter forms from a configuration map or JSON.
 library;
 
 export 'models/field_config.dart';

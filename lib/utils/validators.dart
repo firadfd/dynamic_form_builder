@@ -1,11 +1,24 @@
+/// Signature for a custom validator function.
 typedef CustomValidator = String? Function(dynamic value);
 
 Map<String, CustomValidator> _customValidators = {};
 
+/// Registers a custom validator function globally under a specific key.
 void registerCustomValidator(String key, CustomValidator validator) {
   _customValidators[key] = validator;
 }
 
+/// The default validation logic for form fields.
+///
+/// Supports rules such as:
+/// - `required`: boolean
+/// - `minLength`: int
+/// - `maxLength`: int
+/// - `regex`: String pattern
+/// - `numeric`: boolean
+/// - `min`: num
+/// - `max`: num
+/// - `custom`: String (the key of a registered custom validator)
 String? defaultValidator(Map<String, dynamic>? rules, dynamic value) {
   if (rules == null) return null;
   final str = value?.toString() ?? '';
