@@ -1,3 +1,8 @@
+## 1.3.0
+- Expose `submit()` and `reset()` methods on `DynamicFormController` for complete form lifecycle management.
+- Added `visibleIf` property for intuitive, map-based conditional visibility.
+- Expanded `README.md` to highlight "Theme-First" architecture and elite-tier capabilities.
+
 ## 1.2.0
 - Renamed `FieldConfig` to `DynamicField` for intuitive modeling.
 - Added explicit documentation for `key`, `type`, and `label` mapping.

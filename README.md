@@ -158,7 +158,8 @@ class LoginScreen extends StatelessWidget {
 | `activeThumbColor`| Custom color for Switch thumb when active                        |
 | `checkColor`      | Custom color for Checkbox tick                                     |
 | `options`         | For `dropdown` fields                                              |
-| `conditional`     | Show/hide based on other field value                               |
+| `conditional`     | Show/hide based on other field value (complex)                     |
+| `visibleIf`       | Show/hide based on other field value (simple map)                  |
 | `decorationProps` | Override `InputDecoration` properties for this field               |
 | `decoration`      | Custom `InputDecoration` parameter                                 |
 | `style`           | Custom `TextStyle` parameter                                       |
@@ -245,8 +246,8 @@ DynamicField(
 )
 ```
 
-### 8. Reactive `DynamicFormController`
-Grab the controller to read values or trigger validation programmatically:
+### 8. Reactive `DynamicFormController` & Form Lifecycle
+Grab the controller to read values, reset the form, or trigger validation programmatically:
 ```dart
 final controller = DynamicFormController();
 
@@ -254,6 +255,15 @@ final controller = DynamicFormController();
 if (controller.validate()) {
   print(controller.formData); 
 }
+
+// Or use the submit method which validates and returns the data:
+final data = controller.submit();
+if (data != null) {
+  // save to DB
+}
+
+// Reset the form to its initial state
+controller.reset();
 ```
 
 ---

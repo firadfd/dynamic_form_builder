@@ -49,6 +49,22 @@ class DynamicFormController extends ChangeNotifier {
   /// Returns an unmodifiable map containing all current form field values.
   Map<String, dynamic> get formData => Map.unmodifiable(_values);
 
+  /// Validates the form and returns the form data if valid, or null if invalid.
+  Map<String, dynamic>? submit() {
+    if (validate()) {
+      return formData;
+    }
+    return null;
+  }
+
+  /// Resets the form to its initial state, clearing all values and errors.
+  void reset() {
+    _values.clear();
+    _errors.clear();
+    formKey.currentState?.reset();
+    notifyListeners();
+  }
+
   /// Registers a custom validation function globally.
   void addCustomValidator(String key, String? Function(dynamic) fn) {
     registerCustomValidator(key, fn);

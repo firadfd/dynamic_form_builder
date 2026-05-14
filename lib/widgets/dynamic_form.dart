@@ -79,6 +79,12 @@ class _DynamicFormState extends State<DynamicForm> {
   }
 
   bool _isVisible(DynamicField field) {
+    if (field.visibleIf != null) {
+      for (var entry in field.visibleIf!.entries) {
+        if (_controller.getValue(entry.key) != entry.value) return false;
+      }
+    }
+
     final cond = field.conditional;
     if (cond == null) return true;
     final depValue = _controller.getValue(cond.dependsOnKey);

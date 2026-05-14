@@ -38,6 +38,9 @@ class DynamicField {
   /// Defines conditional visibility logic for this field.
   final Conditional? conditional;
 
+  /// A simpler way to define conditional visibility based on key-value pairs.
+  final Map<String, dynamic>? visibleIf;
+
   /// Extra custom data associated with the field.
   final Map<String, dynamic>? extra;
 
@@ -87,6 +90,7 @@ class DynamicField {
     this.obscured = false,
     this.options,
     this.conditional,
+    this.visibleIf,
     this.extra,
     this.customData,
     this.decorationProps,
@@ -118,6 +122,7 @@ class DynamicField {
       conditional: json['conditional'] != null
           ? Conditional.fromJson(json['conditional'] as Map<String, dynamic>)
           : null,
+      visibleIf: json['visibleIf'] as Map<String, dynamic>?,
       extra: json['extra'] as Map<String, dynamic>?,
       customData: json['customData'] as Map<String, dynamic>?,
       decorationProps: json['decorationProps'] as Map<String, dynamic>?,
@@ -137,6 +142,7 @@ class DynamicField {
         if (options != null)
           'options': options!.map((o) => o.toJson()).toList(),
         if (conditional != null) 'conditional': conditional!.toJson(),
+        if (visibleIf != null) 'visibleIf': visibleIf,
         if (extra != null) 'extra': extra,
         if (customData != null) 'customData': customData,
         if (decorationProps != null) 'decorationProps': decorationProps,
