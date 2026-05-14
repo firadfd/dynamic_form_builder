@@ -1,3 +1,6 @@
+## 1.4.2
+- Fixed image URL and homepage link by correcting the GitHub repository name from `dynamic_field_builder` to `dynamic_form_builder`.
+
 ## 1.4.1
 - Fixed relative image path in `README.md` so it renders correctly on `pub.dev`.
 
