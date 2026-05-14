@@ -108,7 +108,7 @@ class DynamicField {
   /// Creates a [DynamicField] instance from a JSON map.
   factory DynamicField.fromJson(Map<String, dynamic> json) {
     return DynamicField(
-      key: json['key'] as String,
+      key: (json['key'] ?? json['id']) as String,
       type: FieldType.values.byName(json['type'] as String),
       label: json['label'] as String?,
       hint: json['hint'] as String?,

@@ -266,13 +266,53 @@ if (data != null) {
 controller.reset();
 ```
 
+### 9. Multi-Step Forms (Stepper)
+Break down complex forms into a native `Stepper` seamlessly:
+```dart
+final steps = [
+  DynamicStep(
+    title: 'Personal Info',
+    fields: [
+      DynamicField(key: 'name', type: FieldType.text, label: 'Name'),
+    ],
+  ),
+  DynamicStep(
+    title: 'Account Details',
+    fields: [
+      DynamicField(key: 'email', type: FieldType.email, label: 'Email'),
+    ],
+  ),
+];
+
+DynamicStepperForm(
+  steps: steps,
+  onSubmit: (values) => print('All steps complete: $values'),
+)
+```
+
+### 10. JSON Serialization
+Fetch JSON directly from your API and render forms without writing any mapping code:
+```dart
+final jsonFromServer = [
+  {"id": "username", "type": "text", "label": "Username"},
+  {"id": "password", "type": "password", "label": "Password"}
+];
+
+final fields = jsonFromServer.map((e) => DynamicField.fromJson(e)).toList();
+
+DynamicFieldBuilder( // (Alias for DynamicForm)
+  config: fields,
+)
+```
+
 ---
 
 ## 📚 Full API reference
-- **`DynamicForm`** – The main widget.
+- **`DynamicForm`** (or **`DynamicFieldBuilder`**) – The main widget.
+- **`DynamicStepperForm`** – The multi-step form widget.
 - **`DynamicFormController`** – State & validation.
 - **`DynamicFormTheme`** – Global appearance.
-- **`DynamicField`** / **`FieldType`** / **`Conditional`** / **`DropdownOption`** – Data models.
+- **`DynamicField`** / **`DynamicStep`** / **`FieldType`** / **`Conditional`** / **`DropdownOption`** – Data models.
 
 ---
 

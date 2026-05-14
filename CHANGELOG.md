@@ -1,3 +1,10 @@
+## 1.4.0
+- Added `DynamicStepperForm` for out-of-the-box multi-step form capabilities.
+- Added `DynamicStep` model for logically grouping fields into a stepper.
+- Included `DynamicFieldBuilder` typedef alias for API consistency and flexibility.
+- Expanded JSON Serialization documentation showcasing the pre-existing `fromJson` power.
+- Enhanced `fromJson` on `DynamicField` to intelligently parse `id` as an alias for `key`.
+
 ## 1.3.0
 - Expose `submit()` and `reset()` methods on `DynamicFormController` for complete form lifecycle management.
 - Added `visibleIf` property for intuitive, map-based conditional visibility.

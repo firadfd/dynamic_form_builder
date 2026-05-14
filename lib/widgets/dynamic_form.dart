@@ -28,6 +28,9 @@ class DynamicForm extends StatefulWidget {
   /// Optional builder to provide a custom submit button.
   final Widget Function(VoidCallback onSubmit)? submitButtonBuilder;
 
+  /// Whether to wrap the fields in a Flutter [Form] widget. Defaults to true.
+  final bool wrapInForm;
+
   /// Creates a new [DynamicForm] instance.
   const DynamicForm({
     super.key,
@@ -38,6 +41,7 @@ class DynamicForm extends StatefulWidget {
     this.onSubmit,
     this.wrapper,
     this.submitButtonBuilder,
+    this.wrapInForm = true,
   });
 
   @override
@@ -97,25 +101,29 @@ class _DynamicFormState extends State<DynamicForm> {
     final theme = widget.theme ?? const DynamicFormTheme();
     final visibleFields = widget.config.where(_isVisible).toList();
 
-    final form = Form(
-      key: _controller.formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ...visibleFields.map((field) => _buildField(field, theme)),
-          if (widget.onSubmit != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: widget.submitButtonBuilder != null
-                  ? widget.submitButtonBuilder!(_submit)
-                  : ElevatedButton(
-                      onPressed: _submit,
-                      child: const Text('Submit'),
-                    ),
-            ),
-        ],
-      ),
+    final formBody = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ...visibleFields.map((field) => _buildField(field, theme)),
+        if (widget.onSubmit != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: widget.submitButtonBuilder != null
+                ? widget.submitButtonBuilder!(_submit)
+                : ElevatedButton(
+                    onPressed: _submit,
+                    child: const Text('Submit'),
+                  ),
+          ),
+      ],
     );
+
+    final form = widget.wrapInForm
+        ? Form(
+            key: _controller.formKey,
+            child: formBody,
+          )
+        : formBody;
 
     return widget.wrapper != null ? widget.wrapper!(form) : form;
   }
