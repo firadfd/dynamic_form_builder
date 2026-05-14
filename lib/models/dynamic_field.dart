@@ -1,10 +1,10 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'field_type.dart';
 import 'dropdown_option.dart';
 import 'conditional.dart';
 
 /// Configuration for an individual form field.
-class FieldConfig {
+class DynamicField {
   /// Unique identifier for the field, used as the key in the form data map.
   final String key;
 
@@ -19,6 +19,9 @@ class FieldConfig {
 
   /// Validation rules for the field (e.g., {'required': true, 'minLength': 5}).
   final Map<String, dynamic>? validation;
+
+  /// Custom validation callback, similar to TextFormField's validator.
+  final String? Function(dynamic)? validator;
 
   /// Initial value for the field.
   final dynamic initialValue;
@@ -38,8 +41,17 @@ class FieldConfig {
   /// Extra custom data associated with the field.
   final Map<String, dynamic>? extra;
 
+  /// Custom data to pass extra parameters without modifying core logic.
+  final Map<String, dynamic>? customData;
+
   /// Custom properties to override the `InputDecoration` for this specific field.
   final Map<String, dynamic>? decorationProps;
+
+  /// Custom input decoration to override the default theme or decorationProps.
+  final InputDecoration? decoration;
+
+  /// Custom text style for the field input text.
+  final TextStyle? style;
 
   /// Custom widget to display at the beginning of the field.
   final Widget? prefix;
@@ -62,20 +74,24 @@ class FieldConfig {
   /// The color of the thumb when the switch is inactive.
   final Color? inactiveThumbColor;
 
-  /// Creates a new [FieldConfig] instance.
-  const FieldConfig({
+  /// Creates a new [DynamicField] instance.
+  const DynamicField({
     required this.key,
     required this.type,
     this.label,
     this.hint,
     this.validation,
+    this.validator,
     this.initialValue,
     this.enabled = true,
     this.obscured = false,
     this.options,
     this.conditional,
     this.extra,
+    this.customData,
     this.decorationProps,
+    this.decoration,
+    this.style,
     this.prefix,
     this.suffix,
     this.activeColor,
@@ -85,9 +101,9 @@ class FieldConfig {
     this.inactiveThumbColor,
   });
 
-  /// Creates a [FieldConfig] instance from a JSON map.
-  factory FieldConfig.fromJson(Map<String, dynamic> json) {
-    return FieldConfig(
+  /// Creates a [DynamicField] instance from a JSON map.
+  factory DynamicField.fromJson(Map<String, dynamic> json) {
+    return DynamicField(
       key: json['key'] as String,
       type: FieldType.values.byName(json['type'] as String),
       label: json['label'] as String?,
@@ -103,11 +119,12 @@ class FieldConfig {
           ? Conditional.fromJson(json['conditional'] as Map<String, dynamic>)
           : null,
       extra: json['extra'] as Map<String, dynamic>?,
+      customData: json['customData'] as Map<String, dynamic>?,
       decorationProps: json['decorationProps'] as Map<String, dynamic>?,
     );
   }
 
-  /// Converts this [FieldConfig] instance to a JSON map.
+  /// Converts this [DynamicField] instance to a JSON map.
   Map<String, dynamic> toJson() => {
         'key': key,
         'type': type.name,
@@ -121,6 +138,7 @@ class FieldConfig {
           'options': options!.map((o) => o.toJson()).toList(),
         if (conditional != null) 'conditional': conditional!.toJson(),
         if (extra != null) 'extra': extra,
+        if (customData != null) 'customData': customData,
         if (decorationProps != null) 'decorationProps': decorationProps,
       };
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../models/field_config.dart';
+import '../models/dynamic_field.dart';
 import '../models/field_type.dart';
 import '../controller/dynamic_form_controller.dart';
 import '../theme/dynamic_form_theme.dart';
@@ -8,7 +8,7 @@ import '../utils/validators.dart';
 
 /// Signature for a function that builds a form field widget.
 typedef FieldBuilder = Widget Function(
-  FieldConfig config,
+  DynamicField config,
   DynamicFormController controller,
   DynamicFormTheme theme,
 );
@@ -27,7 +27,8 @@ final Map<FieldType, FieldBuilder> defaultBuilders = {
   FieldType.time: _timeField,
 };
 
-String? Function(dynamic)? _validatorFromConfig(FieldConfig config) {
+String? Function(dynamic)? _validatorFromConfig(DynamicField config) {
+  if (config.validator != null) return config.validator;
   return (value) => defaultValidator(config.validation, value);
 }
 
@@ -44,14 +45,15 @@ TextInputType _keyboardType(FieldType type) {
   }
 }
 
-Widget _textField(FieldConfig config, DynamicFormController controller,
+Widget _textField(DynamicField config, DynamicFormController controller,
     DynamicFormTheme theme) {
   final initial = controller.getValue(config.key) ?? config.initialValue;
   return Padding(
     padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
     child: TextFormField(
       initialValue: initial?.toString() ?? '',
-      decoration: theme
+      style: config.style,
+      decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
               props: config.decorationProps,
               prefix: config.prefix,
@@ -66,7 +68,7 @@ Widget _textField(FieldConfig config, DynamicFormController controller,
   );
 }
 
-Widget _passwordField(FieldConfig config, DynamicFormController controller,
+Widget _passwordField(DynamicField config, DynamicFormController controller,
     DynamicFormTheme theme) {
   return PasswordField(config: config, controller: controller, theme: theme);
 }
@@ -74,7 +76,7 @@ Widget _passwordField(FieldConfig config, DynamicFormController controller,
 /// A specialized text field for password entry with a visibility toggle.
 class PasswordField extends StatefulWidget {
   /// The field configuration.
-  final FieldConfig config;
+  final DynamicField config;
 
   /// The form controller.
   final DynamicFormController controller;
@@ -105,7 +107,8 @@ class _PasswordFieldState extends State<PasswordField> {
       padding: widget.theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         initialValue: initial?.toString() ?? '',
-        decoration: widget.theme
+        style: widget.config.style,
+        decoration: widget.config.decoration ?? widget.theme
             .resolveDecoration(ThemeProvider.context,
                 props: widget.config.decorationProps,
                 prefix: widget.config.prefix,
@@ -128,14 +131,15 @@ class _PasswordFieldState extends State<PasswordField> {
   }
 }
 
-Widget _multilineField(FieldConfig config, DynamicFormController controller,
+Widget _multilineField(DynamicField config, DynamicFormController controller,
     DynamicFormTheme theme) {
   final initial = controller.getValue(config.key) ?? config.initialValue;
   return Padding(
     padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
     child: TextFormField(
       initialValue: initial?.toString() ?? '',
-      decoration: theme
+      style: config.style,
+      decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
               props: config.decorationProps,
               prefix: config.prefix,
@@ -150,14 +154,15 @@ Widget _multilineField(FieldConfig config, DynamicFormController controller,
   );
 }
 
-Widget _dropdownField(FieldConfig config, DynamicFormController controller,
+Widget _dropdownField(DynamicField config, DynamicFormController controller,
     DynamicFormTheme theme) {
   final current = controller.getValue(config.key);
   return Padding(
     padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
     child: DropdownButtonFormField<String>(
       initialValue: current?.toString(),
-      decoration: theme
+      style: config.style,
+      decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
               props: config.decorationProps,
               prefix: config.prefix,
@@ -175,7 +180,7 @@ Widget _dropdownField(FieldConfig config, DynamicFormController controller,
   );
 }
 
-Widget _checkboxField(FieldConfig config, DynamicFormController controller,
+Widget _checkboxField(DynamicField config, DynamicFormController controller,
     DynamicFormTheme theme) {
   final initial =
       controller.getValue(config.key) ?? config.initialValue ?? false;
@@ -200,7 +205,7 @@ Widget _checkboxField(FieldConfig config, DynamicFormController controller,
   );
 }
 
-Widget _switchField(FieldConfig config, DynamicFormController controller,
+Widget _switchField(DynamicField config, DynamicFormController controller,
     DynamicFormTheme theme) {
   final initial =
       controller.getValue(config.key) ?? config.initialValue ?? false;
@@ -228,7 +233,7 @@ Widget _switchField(FieldConfig config, DynamicFormController controller,
   );
 }
 
-Widget _dateField(FieldConfig config, DynamicFormController controller,
+Widget _dateField(DynamicField config, DynamicFormController controller,
     DynamicFormTheme theme) {
   final stored = controller.getValue(config.key);
   final date = stored is DateTime
@@ -242,7 +247,8 @@ Widget _dateField(FieldConfig config, DynamicFormController controller,
       key: ValueKey('${config.key}_$dateStr'),
       initialValue: dateStr,
       readOnly: true,
-      decoration: theme
+      style: config.style,
+      decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
               props: config.decorationProps,
               prefix: config.prefix,
@@ -269,7 +275,7 @@ Widget _dateField(FieldConfig config, DynamicFormController controller,
   );
 }
 
-Widget _timeField(FieldConfig config, DynamicFormController controller,
+Widget _timeField(DynamicField config, DynamicFormController controller,
     DynamicFormTheme theme) {
   final stored = controller.getValue(config.key);
   final time = stored is TimeOfDay
@@ -283,7 +289,8 @@ Widget _timeField(FieldConfig config, DynamicFormController controller,
       key: ValueKey('${config.key}_$timeStr'),
       initialValue: timeStr,
       readOnly: true,
-      decoration: theme
+      style: config.style,
+      decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
               props: config.decorationProps,
               prefix: config.prefix,

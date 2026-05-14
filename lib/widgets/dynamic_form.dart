@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import '../models/field_config.dart';
+import '../models/dynamic_field.dart';
 import '../models/field_type.dart';
 import '../controller/dynamic_form_controller.dart';
 import '../theme/dynamic_form_theme.dart';
 import '../builders/default_builders.dart';
 
-/// The main widget for building a dynamic form based on a list of [FieldConfig].
+/// The main widget for building a dynamic form based on a list of [DynamicField].
 class DynamicForm extends StatefulWidget {
   /// The list of field configurations defining the form structure.
-  final List<FieldConfig> config;
+  final List<DynamicField> config;
 
   /// Optional controller to manage form state and validation externally.
   final DynamicFormController? controller;
@@ -78,7 +78,7 @@ class _DynamicFormState extends State<DynamicForm> {
     setState(() {});
   }
 
-  bool _isVisible(FieldConfig field) {
+  bool _isVisible(DynamicField field) {
     final cond = field.conditional;
     if (cond == null) return true;
     final depValue = _controller.getValue(cond.dependsOnKey);
@@ -120,7 +120,7 @@ class _DynamicFormState extends State<DynamicForm> {
     }
   }
 
-  Widget _buildField(FieldConfig config, DynamicFormTheme theme) {
+  Widget _buildField(DynamicField config, DynamicFormTheme theme) {
     if (config.type == FieldType.custom) {
       final builderKey = config.extra?['builderKey'] as String? ?? config.key;
       final customBuilder = widget.customBuilders?[builderKey];

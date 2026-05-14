@@ -1,7 +1,7 @@
 /// A library for building reactive Flutter forms from a configuration map or JSON.
 library;
 
-export 'models/field_config.dart';
+export 'models/dynamic_field.dart';
 export 'models/field_type.dart';
 export 'models/dropdown_option.dart';
 export 'models/conditional.dart';

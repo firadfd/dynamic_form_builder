@@ -42,20 +42,20 @@ Then run `flutter pub get`.
 import 'package:dynamic_field_builder/dynamic_field_builder.dart';
 
 final config = [
-  FieldConfig(
+  DynamicField(
     key: 'name', 
     type: FieldType.text, 
     label: 'Full Name',
     prefix: Icon(Icons.person),
     validation: {'required': true}
   ),
-  FieldConfig(
+  DynamicField(
     key: 'password', 
     type: FieldType.password, 
     label: 'Password',
     prefix: Icon(Icons.lock),
   ),
-  FieldConfig(
+  DynamicField(
     key: 'country', 
     type: FieldType.dropdown, 
     label: 'Country',
@@ -74,9 +74,77 @@ DynamicForm(
 
 ---
 
+## 💻 Real-world Example: Login Form
+
+```dart
+import 'package:dynamic_field_builder/dynamic_field_builder.dart';
+import 'package:flutter/material.dart';
+
+class LoginScreen extends StatelessWidget {
+  final controller = DynamicFormController();
+
+  final config = [
+    DynamicField(
+      key: 'email',
+      type: FieldType.email,
+      label: 'Email Address',
+      prefix: const Icon(Icons.email_outlined),
+      validation: {'required': true},
+      validator: (val) {
+        if (val == null || !val.toString().contains('@')) return 'Invalid email format';
+        return null;
+      },
+    ),
+    DynamicField(
+      key: 'password',
+      type: FieldType.password,
+      label: 'Password',
+      prefix: const Icon(Icons.lock_outline),
+      validation: {'required': true, 'minLength': 6},
+    ),
+    DynamicField(
+      key: 'remember_me',
+      type: FieldType.checkbox,
+      label: 'Remember me',
+      initialValue: false,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Welcome Back', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 32),
+            DynamicForm(
+              config: config,
+              controller: controller,
+              submitButtonBuilder: (onSubmit) => ElevatedButton(
+                onPressed: onSubmit,
+                style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
+                child: const Text('Login'),
+              ),
+              onSubmit: (values) {
+                print('Login with: ${values["email"]} / ${values["password"]}');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+---
+
 ## ✨ Features deep‑dive
 
-### 1. Declarative field config (`FieldConfig`)
+### 1. Declarative field config (`DynamicField`)
 
 | Property          | Description                                                        |
 |-------------------|--------------------------------------------------------------------|
@@ -84,6 +152,7 @@ DynamicForm(
 | `type`            | One of `FieldType` (text, email, password, number, ...)            |
 | `label` / `hint`  | Display text                                                       |
 | `validation`      | Built‑in rules (`required`, `minLength`, `regex`, …)               |
+| `validator`       | Custom validation callback, similar to `TextFormField`             |
 | `prefix` / `suffix`| Custom **Widgets** (Icons, Images, etc.) for the field             |
 | `activeColor`     | Custom color for Checkbox when active                             |
 | `activeThumbColor`| Custom color for Switch thumb when active                        |
@@ -91,6 +160,9 @@ DynamicForm(
 | `options`         | For `dropdown` fields                                              |
 | `conditional`     | Show/hide based on other field value                               |
 | `decorationProps` | Override `InputDecoration` properties for this field               |
+| `decoration`      | Custom `InputDecoration` parameter                                 |
+| `style`           | Custom `TextStyle` parameter                                       |
+| `customData`      | Additional Map to pass extra custom parameters                     |
 
 ### 2. Password Visibility Toggle
 The `password` field type now comes with a built-in visibility toggle. It automatically adds a suffix icon that allows users to show or hide their password.
@@ -98,7 +170,7 @@ The `password` field type now comes with a built-in visibility toggle. It automa
 ### 3. Prefix & Suffix Widgets
 Unlike other libraries that only allow `IconData`, we allow any `Widget`.
 ```dart
-FieldConfig(
+DynamicField(
   key: 'profile',
   type: FieldType.text,
   prefix: CircleAvatar(backgroundImage: AssetImage('assets/user.png')),
@@ -121,7 +193,7 @@ DynamicForm(
 
 ### 5. Validation that grows with you
 ```dart
-FieldConfig(
+DynamicField(
   key: 'password',
   type: FieldType.password,
   validation: {
@@ -135,7 +207,7 @@ FieldConfig(
 ### 6. Conditional visibility
 Show a field only when another field meets a condition:
 ```dart
-FieldConfig(
+DynamicField(
   key: 'other_pet',
   type: FieldType.text,
   label: 'Which pet?',
@@ -162,7 +234,7 @@ DynamicForm(
 
 **Per-field overrides**:
 ```dart
-FieldConfig(
+DynamicField(
   key: 'email',
   type: FieldType.email,
   decorationProps: {
@@ -190,7 +262,7 @@ if (controller.validate()) {
 - **`DynamicForm`** – The main widget.
 - **`DynamicFormController`** – State & validation.
 - **`DynamicFormTheme`** – Global appearance.
-- **`FieldConfig`** / **`FieldType`** / **`Conditional`** / **`DropdownOption`** – Data models.
+- **`DynamicField`** / **`FieldType`** / **`Conditional`** / **`DropdownOption`** – Data models.
 
 ---
 

@@ -29,7 +29,7 @@ class _ExamplePageState extends State<ExamplePage> {
   final controller = DynamicFormController();
 
   final config = [
-    FieldConfig(
+    DynamicField(
         key: 'name',
         type: FieldType.text,
         label: 'Full Name',
@@ -45,19 +45,19 @@ class _ExamplePageState extends State<ExamplePage> {
         validation: const {
           'required': true
         }),
-    const FieldConfig(
+    const DynamicField(
         key: 'email',
         type: FieldType.email,
         label: 'Email',
         prefix: Icon(Icons.email)),
-    const FieldConfig(
+    const DynamicField(
         key: 'password',
         type: FieldType.password,
         label: 'Password',
         prefix: Icon(Icons.lock),
         validation: {'minLength': 6}),
-    const FieldConfig(key: 'bio', type: FieldType.multiline, label: 'Bio'),
-    const FieldConfig(
+    const DynamicField(key: 'bio', type: FieldType.multiline, label: 'Bio'),
+    const DynamicField(
         key: 'country',
         type: FieldType.dropdown,
         label: 'Country',
@@ -65,13 +65,13 @@ class _ExamplePageState extends State<ExamplePage> {
           DropdownOption(value: 'us', label: 'United States'),
           DropdownOption(value: 'ca', label: 'Canada'),
         ]),
-    const FieldConfig(
+    const DynamicField(
         key: 'agree',
         type: FieldType.checkbox,
         label: 'I agree to terms',
         activeColor: Colors.blue,
         checkColor: Colors.white),
-    FieldConfig(
+    DynamicField(
         key: 'notifications',
         type: FieldType.switch_,
         label: 'Enable notifications',
@@ -79,9 +79,9 @@ class _ExamplePageState extends State<ExamplePage> {
         activeThumbColor: Colors.green,
         inactiveTrackColor: Colors.red.withValues(alpha: 0.3),
         inactiveThumbColor: Colors.red),
-    const FieldConfig(
+    const DynamicField(
         key: 'birthdate', type: FieldType.date, label: 'Birthdate'),
-    const FieldConfig(
+    const DynamicField(
         key: 'meeting_time', type: FieldType.time, label: 'Meeting time'),
   ];
 
