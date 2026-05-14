@@ -15,7 +15,7 @@
 
 ## 📸 Preview
 
-![Hero](assets/images/hero.png)
+![Hero](https://raw.githubusercontent.com/firadfd/dynamic_field_builder/main/assets/images/hero.png)
 
 *The Power of Dynamic Forms: From simple inputs to complex, themed interfaces.*
 

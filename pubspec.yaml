@@ -1,6 +1,6 @@
 name: dynamic_field_builder
 description: Build reactive Flutter forms from a dart map or JSON config with full UI customization.
-version: 1.4.0
+version: 1.4.1
 homepage: https://github.com/firadfd/dynamic_field_builder
 environment:
   sdk: ">=3.5.0 <4.0.0"

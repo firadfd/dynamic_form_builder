@@ -1,3 +1,6 @@
+## 1.4.1
+- Fixed relative image path in `README.md` so it renders correctly on `pub.dev`.
+
 ## 1.4.0
 - Added `DynamicStepperForm` for out-of-the-box multi-step form capabilities.
 - Added `DynamicStep` model for logically grouping fields into a stepper.
