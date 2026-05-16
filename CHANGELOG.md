@@ -1,3 +1,6 @@
+## 2.0.1
+- Fixed video embedding issue in `README.md` to ensure correct rendering across platforms.
+
 ## 2.0.0
 - **BREAKING CHANGE**: Replaced `decorationProps` (`Map<String, dynamic>`) with the type-safe `FieldDecorationOverride` class for customizing `InputDecoration` properties.
 - Added new field types: `FieldType.radio`, `FieldType.slider`, `FieldType.file`, and `FieldType.phone`.
