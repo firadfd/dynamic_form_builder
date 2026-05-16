@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/field_decoration_override.dart';
 
 /// Theme configuration for customizing the appearance of [DynamicForm].
 class DynamicFormTheme {
@@ -33,26 +34,26 @@ class DynamicFormTheme {
   /// Merges properties with the default [InputDecoration].
   ///
   /// This method resolves the final decoration for a field by combining the global
-  /// [inputDecoration] with field-specific [props], [prefix], and [suffix].
+  /// [inputDecoration] with field-specific [override], [prefix], and [suffix].
   InputDecoration resolveDecoration(
     BuildContext context, {
-    Map<String, dynamic>? props,
+    FieldDecorationOverride? override,
     Widget? prefix,
     Widget? suffix,
   }) {
     final defaultDeco = inputDecoration ?? const InputDecoration();
 
     return defaultDeco.copyWith(
-      prefixIcon: prefix ?? (props?['prefix'] as Widget?),
-      suffixIcon: suffix ?? (props?['suffix'] as Widget?),
-      filled: props?['filled'] as bool?,
-      fillColor: props?['fillColor'] as Color?,
-      errorStyle: props?['errorStyle'] as TextStyle?,
-      labelStyle: props?['labelStyle'] as TextStyle?,
-      hintStyle: props?['hintStyle'] as TextStyle?,
-      border: props?['border'] as InputBorder?,
-      enabledBorder: props?['enabledBorder'] as InputBorder?,
-      focusedBorder: props?['focusedBorder'] as InputBorder?,
+      prefixIcon: prefix ?? override?.prefix,
+      suffixIcon: suffix ?? override?.suffix,
+      filled: override?.filled,
+      fillColor: override?.fillColor,
+      errorStyle: override?.errorStyle,
+      labelStyle: override?.labelStyle,
+      hintStyle: override?.hintStyle,
+      border: override?.border,
+      enabledBorder: override?.enabledBorder,
+      focusedBorder: override?.focusedBorder,
     );
   }
 }

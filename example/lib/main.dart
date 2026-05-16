@@ -34,14 +34,14 @@ class _ExamplePageState extends State<ExamplePage> {
         type: FieldType.text,
         label: 'Full Name',
         prefix: const Icon(Icons.person_outline, color: Colors.blue),
-        decorationProps: {
-          'filled': true,
-          'fillColor': Colors.blue.withValues(alpha: 0.05),
-          'border': OutlineInputBorder(
+        decorationOverride: FieldDecorationOverride(
+          filled: true,
+          fillColor: Colors.blue.withValues(alpha: 0.05),
+          border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
             borderSide: const BorderSide(color: Colors.blue, width: 2),
           ),
-        },
+        ),
         validation: const {
           'required': true
         }),
@@ -83,6 +83,49 @@ class _ExamplePageState extends State<ExamplePage> {
         key: 'birthdate', type: FieldType.date, label: 'Birthdate'),
     const DynamicField(
         key: 'meeting_time', type: FieldType.time, label: 'Meeting time'),
+    const DynamicField(
+      key: 'subscription',
+      type: FieldType.radio,
+      label: 'Subscription Plan',
+      options: [
+        DropdownOption(value: 'starter', label: 'Starter (\$9.99/mo)'),
+        DropdownOption(value: 'pro', label: 'Pro (\$19.99/mo)'),
+        DropdownOption(value: 'premium', label: 'Premium (\$49.99/mo)'),
+      ],
+    ),
+    const DynamicField(
+      key: 'experience_rating',
+      type: FieldType.slider,
+      label: 'Rate your experience',
+      initialValue: 5.0,
+      activeColor: Colors.blue,
+      customData: {
+        'min': 0.0,
+        'max': 10.0,
+        'divisions': 10,
+      },
+    ),
+    const DynamicField(
+      key: 'phone_number',
+      type: FieldType.phone,
+      label: 'Phone Number',
+      prefix: Icon(Icons.phone),
+      customData: {
+        'countryCode': '+1',
+      },
+    ),
+    DynamicField(
+      key: 'avatar',
+      type: FieldType.file,
+      label: 'Upload Avatar',
+      customData: {
+        'onFilePick': () async {
+          // Simulated file picker delay
+          await Future.delayed(const Duration(seconds: 1));
+          return 'selected_avatar_image.png';
+        }
+      },
+    ),
   ];
 
   @override

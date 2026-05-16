@@ -6,6 +6,7 @@ export 'models/dynamic_step.dart';
 export 'models/field_type.dart';
 export 'models/dropdown_option.dart';
 export 'models/conditional.dart';
+export 'models/field_decoration_override.dart';
 export 'controller/dynamic_form_controller.dart';
 export 'theme/dynamic_form_theme.dart';
 export 'builders/default_builders.dart';

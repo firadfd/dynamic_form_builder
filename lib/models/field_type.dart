@@ -32,4 +32,16 @@ enum FieldType {
 
   /// A custom field type that can be handled by a custom builder.
   custom,
+
+  /// A radio button selection field.
+  radio,
+
+  /// A slider field for numeric values.
+  slider,
+
+  /// A file or image picker field.
+  file,
+
+  /// A phone number input field.
+  phone,
 }

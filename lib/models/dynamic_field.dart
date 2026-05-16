@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'field_type.dart';
 import 'dropdown_option.dart';
 import 'conditional.dart';
+import 'field_decoration_override.dart';
 
 /// Configuration for an individual form field.
 class DynamicField {
@@ -48,7 +49,7 @@ class DynamicField {
   final Map<String, dynamic>? customData;
 
   /// Custom properties to override the `InputDecoration` for this specific field.
-  final Map<String, dynamic>? decorationProps;
+  final FieldDecorationOverride? decorationOverride;
 
   /// Custom input decoration to override the default theme or decorationProps.
   final InputDecoration? decoration;
@@ -93,7 +94,7 @@ class DynamicField {
     this.visibleIf,
     this.extra,
     this.customData,
-    this.decorationProps,
+    this.decorationOverride,
     this.decoration,
     this.style,
     this.prefix,
@@ -125,7 +126,10 @@ class DynamicField {
       visibleIf: json['visibleIf'] as Map<String, dynamic>?,
       extra: json['extra'] as Map<String, dynamic>?,
       customData: json['customData'] as Map<String, dynamic>?,
-      decorationProps: json['decorationProps'] as Map<String, dynamic>?,
+      decorationOverride: json['decorationOverride'] != null
+          ? FieldDecorationOverride.fromJson(
+              json['decorationOverride'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -145,6 +149,6 @@ class DynamicField {
         if (visibleIf != null) 'visibleIf': visibleIf,
         if (extra != null) 'extra': extra,
         if (customData != null) 'customData': customData,
-        if (decorationProps != null) 'decorationProps': decorationProps,
+        if (decorationOverride != null) 'decorationOverride': decorationOverride!.toJson(),
       };
 }

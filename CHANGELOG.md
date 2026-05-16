@@ -1,3 +1,9 @@
+## 2.0.0
+- **BREAKING CHANGE**: Replaced `decorationProps` (`Map<String, dynamic>`) with the type-safe `FieldDecorationOverride` class for customizing `InputDecoration` properties.
+- Added new field types: `FieldType.radio`, `FieldType.slider`, `FieldType.file`, and `FieldType.phone`.
+- Expanded the use of `customData` to provide `min`, `max`, and `divisions` for sliders, as well as `onFilePick` callbacks for file pickers.
+- Updated documentation with `customData` examples and project disclaimers.
+
 ## 1.4.2
 - Fixed image URL and homepage link by correcting the GitHub repository name from `dynamic_field_builder` to `dynamic_form_builder`.
 

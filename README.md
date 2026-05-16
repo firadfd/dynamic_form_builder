@@ -15,7 +15,7 @@
 
 ## 📸 Preview
 
-![Hero](https://github.com/firadfd/dynamic_form_builder/raw/main/assets/images/hero.png)
+![Hero](https://github.com/firadfd/dynamic_form_builder/raw/main/assets/video/form_preview.mp4)
 
 *The Power of Dynamic Forms: From simple inputs to complex, themed interfaces.*
 
@@ -29,7 +29,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dynamic_field_builder: ^1.1.0
+  dynamic_field_builder: ^2.0.0
 ```
 
 Then run `flutter pub get`.
@@ -160,10 +160,10 @@ class LoginScreen extends StatelessWidget {
 | `options`         | For `dropdown` fields                                              |
 | `conditional`     | Show/hide based on other field value (complex)                     |
 | `visibleIf`       | Show/hide based on other field value (simple map)                  |
-| `decorationProps` | Override `InputDecoration` properties for this field               |
+| `decorationOverride` | Override `InputDecoration` using type-safe `FieldDecorationOverride`|
 | `decoration`      | Custom `InputDecoration` parameter                                 |
 | `style`           | Custom `TextStyle` parameter                                       |
-| `customData`      | Additional Map to pass extra custom parameters                     |
+| `customData`      | Additional Map to pass extra parameters (e.g. slider min/max)      |
 
 ### 2. Password Visibility Toggle
 The `password` field type now comes with a built-in visibility toggle. It automatically adds a suffix icon that allows users to show or hide their password.
@@ -238,10 +238,37 @@ DynamicForm(
 DynamicField(
   key: 'email',
   type: FieldType.email,
-  decorationProps: {
-    'filled': true,
-    'fillColor': Colors.blue.withValues(alpha: 0.1),
-    'focusedBorder': OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+  decorationOverride: FieldDecorationOverride(
+    filled: true,
+    fillColor: Colors.blue.withValues(alpha: 0.1),
+    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
+  ),
+)
+```
+
+### 8. Using `customData` for Advanced Components
+Pass arbitrary properties to complex fields like `slider` or `file` via `customData`:
+```dart
+DynamicField(
+  key: 'rating',
+  type: FieldType.slider,
+  label: 'Rate your experience',
+  initialValue: 5.0,
+  customData: {
+    'min': 0.0,
+    'max': 10.0,
+    'divisions': 10,
+  },
+),
+DynamicField(
+  key: 'avatar',
+  type: FieldType.file,
+  label: 'Profile Picture',
+  customData: {
+    'onFilePick': () async {
+      // Trigger your actual file picker logic here
+      return 'user_avatar.png';
+    }
   },
 )
 ```
@@ -318,6 +345,8 @@ DynamicFieldBuilder( // (Alias for DynamicForm)
 
 ## 🤝 Contributing
 PRs welcome! Feel free to open issues or propose enhancements.
+
+> **Disclaimer**: This package has no community yet — no issues filed, no PRs, no Stack Overflow presence — you're on your own if you hit a bug. We highly appreciate early adopters who report issues!
 
 ---
 

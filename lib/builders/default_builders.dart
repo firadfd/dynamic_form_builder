@@ -25,6 +25,10 @@ final Map<FieldType, FieldBuilder> defaultBuilders = {
   FieldType.switch_: _switchField,
   FieldType.date: _dateField,
   FieldType.time: _timeField,
+  FieldType.radio: _radioField,
+  FieldType.slider: _sliderField,
+  FieldType.file: _fileField,
+  FieldType.phone: _phoneField,
 };
 
 String? Function(dynamic)? _validatorFromConfig(DynamicField config) {
@@ -55,7 +59,7 @@ Widget _textField(DynamicField config, DynamicFormController controller,
       style: config.style,
       decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
-              props: config.decorationProps,
+              override: config.decorationOverride,
               prefix: config.prefix,
               suffix: config.suffix)
           .copyWith(labelText: config.label, hintText: config.hint),
@@ -110,7 +114,7 @@ class _PasswordFieldState extends State<PasswordField> {
         style: widget.config.style,
         decoration: widget.config.decoration ?? widget.theme
             .resolveDecoration(ThemeProvider.context,
-                props: widget.config.decorationProps,
+                override: widget.config.decorationOverride,
                 prefix: widget.config.prefix,
                 suffix: widget.config.suffix)
             .copyWith(
@@ -141,7 +145,7 @@ Widget _multilineField(DynamicField config, DynamicFormController controller,
       style: config.style,
       decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
-              props: config.decorationProps,
+              override: config.decorationOverride,
               prefix: config.prefix,
               suffix: config.suffix)
           .copyWith(labelText: config.label, hintText: config.hint),
@@ -164,7 +168,7 @@ Widget _dropdownField(DynamicField config, DynamicFormController controller,
       style: config.style,
       decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
-              props: config.decorationProps,
+              override: config.decorationOverride,
               prefix: config.prefix,
               suffix: config.suffix)
           .copyWith(labelText: config.label, hintText: config.hint),
@@ -250,7 +254,7 @@ Widget _dateField(DynamicField config, DynamicFormController controller,
       style: config.style,
       decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
-              props: config.decorationProps,
+              override: config.decorationOverride,
               prefix: config.prefix,
               suffix: config.suffix ?? const Icon(Icons.calendar_today))
           .copyWith(
@@ -292,7 +296,7 @@ Widget _timeField(DynamicField config, DynamicFormController controller,
       style: config.style,
       decoration: config.decoration ?? theme
           .resolveDecoration(ThemeProvider.context,
-              props: config.decorationProps,
+              override: config.decorationOverride,
               prefix: config.prefix,
               suffix: config.suffix ?? const Icon(Icons.access_time))
           .copyWith(
@@ -325,6 +329,146 @@ TimeOfDay? _tryParseTime(String s) {
     }
   } catch (_) {}
   return null;
+}
+
+Widget _radioField(DynamicField config, DynamicFormController controller,
+    DynamicFormTheme theme) {
+  final current = controller.getValue(config.key);
+  return Padding(
+    padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (config.label != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(config.label!,
+                style: theme.labelStyle ??
+                    Theme.of(ThemeProvider.context).textTheme.titleMedium),
+          ),
+        ...(config.options ?? []).map((o) {
+          return RadioListTile<String>(
+            title: Text(o.label),
+            value: o.value,
+            groupValue: current?.toString(),
+            activeColor: config.activeColor,
+            onChanged: config.enabled
+                ? (v) => controller.setValue(config.key, v)
+                : null,
+          );
+        }),
+      ],
+    ),
+  );
+}
+
+Widget _sliderField(DynamicField config, DynamicFormController controller,
+    DynamicFormTheme theme) {
+  final current = controller.getValue(config.key) ?? config.initialValue ?? 0.0;
+  final double val = current is double
+      ? current
+      : (current is num ? current.toDouble() : double.tryParse(current.toString()) ?? 0.0);
+  final min = (config.customData?['min'] as num?)?.toDouble() ?? 0.0;
+  final max = (config.customData?['max'] as num?)?.toDouble() ?? 100.0;
+  final divisions = config.customData?['divisions'] as int?;
+
+  return Padding(
+    padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (config.label != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text('${config.label!} (${val.toStringAsFixed(1)})',
+                style: theme.labelStyle ??
+                    Theme.of(ThemeProvider.context).textTheme.titleMedium),
+          ),
+        Slider(
+          value: val.clamp(min, max),
+          min: min,
+          max: max,
+          divisions: divisions,
+          activeColor: config.activeColor,
+          inactiveColor: config.inactiveTrackColor,
+          onChanged: config.enabled
+              ? (v) => controller.setValue(config.key, v)
+              : null,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _fileField(DynamicField config, DynamicFormController controller,
+    DynamicFormTheme theme) {
+  final current = controller.getValue(config.key)?.toString() ?? '';
+  return Padding(
+    padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
+    child: TextFormField(
+      key: ValueKey('${config.key}_$current'),
+      initialValue: current,
+      readOnly: true,
+      style: config.style,
+      decoration: config.decoration ??
+          theme
+              .resolveDecoration(ThemeProvider.context,
+                  override: config.decorationOverride,
+                  prefix: config.prefix,
+                  suffix: config.suffix ?? const Icon(Icons.attach_file))
+              .copyWith(
+                labelText: config.label,
+                hintText: config.hint ?? 'Tap to select file',
+              ),
+      onTap: config.enabled
+          ? () async {
+              if (config.customData != null &&
+                  config.customData!['onFilePick'] != null) {
+                final callback = config.customData!['onFilePick'] as Function;
+                final result = await callback();
+                if (result != null) {
+                  controller.setValue(config.key, result);
+                }
+              }
+            }
+          : null,
+      validator: _validatorFromConfig(config),
+    ),
+  );
+}
+
+Widget _phoneField(DynamicField config, DynamicFormController controller,
+    DynamicFormTheme theme) {
+  final initial = controller.getValue(config.key) ?? config.initialValue;
+  final prefixCode = config.customData?['countryCode']?.toString();
+  return Padding(
+    padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
+    child: TextFormField(
+      initialValue: initial?.toString() ?? '',
+      style: config.style,
+      decoration: config.decoration ??
+          theme
+              .resolveDecoration(ThemeProvider.context,
+                  override: config.decorationOverride,
+                  prefix: config.prefix ??
+                      (prefixCode != null
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [Text(prefixCode)],
+                              ),
+                            )
+                          : null),
+                  suffix: config.suffix)
+              .copyWith(labelText: config.label, hintText: config.hint),
+      enabled: config.enabled,
+      keyboardType: TextInputType.phone,
+      validator: _validatorFromConfig(config),
+      onChanged: (v) => controller.setValue(config.key, v),
+    ),
+  );
 }
 
 /// Utility to provide a BuildContext globally for showing dialogs and resolve themes.
