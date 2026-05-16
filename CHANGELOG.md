@@ -1,3 +1,6 @@
+## 2.0.2
+- Replaced README video with `hero.gif` for proper pub.dev and GitHub rendering.
+
 ## 2.0.1
 - Fixed video embedding issue in `README.md` to ensure correct rendering across platforms.
 

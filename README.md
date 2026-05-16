@@ -15,9 +15,7 @@
 
 ## 📸 Preview
 
-<video src="https://github.com/firadfd/dynamic_form_builder/raw/main/assets/video/form_preview.mp4" controls="controls" muted="muted" autoplay="autoplay" width="400"></video>
-
-*(Note: If you are viewing this on pub.dev, the video may not render. [Click here to watch the preview video](https://github.com/firadfd/dynamic_form_builder/raw/main/assets/video/form_preview.mp4))*
+![Hero](https://github.com/firadfd/dynamic_form_builder/raw/main/assets/images/hero.gif)
 
 *The Power of Dynamic Forms: From simple inputs to complex, themed interfaces.*
 
