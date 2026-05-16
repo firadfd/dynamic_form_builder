@@ -1,3 +1,10 @@
+## 2.1.0
+- **New Field Types**: Added `FieldType.multiSelect` (renders as a `FilterChip` wrap) and `FieldType.group` for nested layouts.
+- **Reactivity**: Added `valueStream` to `DynamicFormController` for live state observation.
+- **Form Enhancements**: Added `initialValues` to `DynamicForm` for easy pre-population.
+- **Field Enhancements**: Added `readOnly`, `onChanged`, and `autofillHints` to `DynamicField`.
+- **Robustness**: `DynamicField.fromJson` now gracefully falls back to `FieldType.text` on unknown field types.
+
 ## 2.0.2
 - Replaced README video with `hero.gif` for proper pub.dev and GitHub rendering.
 

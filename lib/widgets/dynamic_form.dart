@@ -28,6 +28,9 @@ class DynamicForm extends StatefulWidget {
   /// Optional builder to provide a custom submit button.
   final Widget Function(VoidCallback onSubmit)? submitButtonBuilder;
 
+  /// Optional initial values to pre-populate the form.
+  final Map<String, dynamic>? initialValues;
+
   /// Whether to wrap the fields in a Flutter [Form] widget. Defaults to true.
   final bool wrapInForm;
 
@@ -41,6 +44,7 @@ class DynamicForm extends StatefulWidget {
     this.onSubmit,
     this.wrapper,
     this.submitButtonBuilder,
+    this.initialValues,
     this.wrapInForm = true,
   });
 
@@ -60,6 +64,11 @@ class _DynamicFormState extends State<DynamicForm> {
   }
 
   void _initValues() {
+    if (widget.initialValues != null) {
+      widget.initialValues!.forEach((key, value) {
+        _controller.setValue(key, value);
+      });
+    }
     for (var field in widget.config) {
       if (field.initialValue != null &&
           _controller.getValue(field.key) == null) {
@@ -135,6 +144,29 @@ class _DynamicFormState extends State<DynamicForm> {
   }
 
   Widget _buildField(DynamicField config, DynamicFormTheme theme) {
+    if (config.type == FieldType.group) {
+      return Padding(
+        padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (config.label != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  config.label!,
+                  style: theme.labelStyle ??
+                      Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                ),
+              ),
+            if (config.fields != null)
+              ...config.fields!.where(_isVisible).map((f) => _buildField(f, theme)),
+          ],
+        ),
+      );
+    }
     if (config.type == FieldType.custom) {
       final builderKey = config.extra?['builderKey'] as String? ?? config.key;
       final customBuilder = widget.customBuilders?[builderKey];

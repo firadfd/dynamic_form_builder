@@ -44,4 +44,10 @@ enum FieldType {
 
   /// A phone number input field.
   phone,
+
+  /// A dropdown that allows multiple selections.
+  multiSelect,
+
+  /// A logical grouping of multiple fields.
+  group,
 }

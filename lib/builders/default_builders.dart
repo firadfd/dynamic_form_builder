@@ -29,6 +29,7 @@ final Map<FieldType, FieldBuilder> defaultBuilders = {
   FieldType.slider: _sliderField,
   FieldType.file: _fileField,
   FieldType.phone: _phoneField,
+  FieldType.multiSelect: _multiSelectField,
 };
 
 String? Function(dynamic)? _validatorFromConfig(DynamicField config) {
@@ -64,10 +65,15 @@ Widget _textField(DynamicField config, DynamicFormController controller,
               suffix: config.suffix)
           .copyWith(labelText: config.label, hintText: config.hint),
       enabled: config.enabled,
+      readOnly: config.readOnly,
       obscureText: config.obscured,
+      autofillHints: config.autofillHints,
       keyboardType: _keyboardType(config.type),
       validator: _validatorFromConfig(config),
-      onChanged: (v) => controller.setValue(config.key, v),
+      onChanged: (v) {
+        controller.setValue(config.key, v);
+        config.onChanged?.call(v);
+      },
     ),
   );
 }
@@ -126,10 +132,15 @@ class _PasswordFieldState extends State<PasswordField> {
               ),
             ),
         enabled: widget.config.enabled,
+        readOnly: widget.config.readOnly,
         obscureText: _obscured,
+        autofillHints: widget.config.autofillHints,
         keyboardType: TextInputType.visiblePassword,
         validator: _validatorFromConfig(widget.config),
-        onChanged: (v) => widget.controller.setValue(widget.config.key, v),
+        onChanged: (v) {
+          widget.controller.setValue(widget.config.key, v);
+          widget.config.onChanged?.call(v);
+        },
       ),
     );
   }
@@ -151,9 +162,14 @@ Widget _multilineField(DynamicField config, DynamicFormController controller,
           .copyWith(labelText: config.label, hintText: config.hint),
       maxLines: 5,
       enabled: config.enabled,
+      readOnly: config.readOnly,
+      autofillHints: config.autofillHints,
       keyboardType: TextInputType.multiline,
       validator: _validatorFromConfig(config),
-      onChanged: (v) => controller.setValue(config.key, v),
+      onChanged: (v) {
+        controller.setValue(config.key, v);
+        config.onChanged?.call(v);
+      },
     ),
   );
 }
@@ -177,8 +193,12 @@ Widget _dropdownField(DynamicField config, DynamicFormController controller,
                   (o) => DropdownMenuItem(value: o.value, child: Text(o.label)))
               .toList() ??
           [],
-      onChanged:
-          config.enabled ? (v) => controller.setValue(config.key, v) : null,
+      onChanged: config.enabled && !config.readOnly
+          ? (v) {
+              controller.setValue(config.key, v);
+              config.onChanged?.call(v);
+            }
+          : null,
       validator: _validatorFromConfig(config),
     ),
   );
@@ -198,10 +218,11 @@ Widget _checkboxField(DynamicField config, DynamicFormController controller,
         checkColor: config.checkColor,
         title: Text(config.label ?? ''),
         value: field.value,
-        onChanged: config.enabled
+        onChanged: config.enabled && !config.readOnly
             ? (v) {
                 field.didChange(v);
                 controller.setValue(config.key, v);
+                config.onChanged?.call(v);
               }
             : null,
       ),
@@ -226,10 +247,11 @@ Widget _switchField(DynamicField config, DynamicFormController controller,
         inactiveTrackColor: config.inactiveTrackColor,
         title: Text(config.label ?? ''),
         value: field.value ?? false,
-        onChanged: config.enabled
+        onChanged: config.enabled && !config.readOnly
             ? (v) {
                 field.didChange(v);
                 controller.setValue(config.key, v);
+                config.onChanged?.call(v);
               }
             : null,
       ),
@@ -261,7 +283,7 @@ Widget _dateField(DynamicField config, DynamicFormController controller,
             labelText: config.label,
             hintText: config.hint,
           ),
-      onTap: config.enabled
+      onTap: config.enabled && !config.readOnly
           ? () async {
               final picked = await showDatePicker(
                 context: ThemeProvider.context,
@@ -271,6 +293,7 @@ Widget _dateField(DynamicField config, DynamicFormController controller,
               );
               if (picked != null) {
                 controller.setValue(config.key, picked);
+                config.onChanged?.call(picked);
               }
             }
           : null,
@@ -303,7 +326,7 @@ Widget _timeField(DynamicField config, DynamicFormController controller,
             labelText: config.label,
             hintText: config.hint,
           ),
-      onTap: config.enabled
+      onTap: config.enabled && !config.readOnly
           ? () async {
               final picked = await showTimePicker(
                 context: ThemeProvider.context,
@@ -311,6 +334,7 @@ Widget _timeField(DynamicField config, DynamicFormController controller,
               );
               if (picked != null) {
                 controller.setValue(config.key, picked);
+                config.onChanged?.call(picked);
               }
             }
           : null,
@@ -352,8 +376,11 @@ Widget _radioField(DynamicField config, DynamicFormController controller,
             value: o.value,
             groupValue: current?.toString(),
             activeColor: config.activeColor,
-            onChanged: config.enabled
-                ? (v) => controller.setValue(config.key, v)
+            onChanged: config.enabled && !config.readOnly
+                ? (v) {
+                    controller.setValue(config.key, v);
+                    config.onChanged?.call(v);
+                  }
                 : null,
           );
         }),
@@ -391,8 +418,11 @@ Widget _sliderField(DynamicField config, DynamicFormController controller,
           divisions: divisions,
           activeColor: config.activeColor,
           inactiveColor: config.inactiveTrackColor,
-          onChanged: config.enabled
-              ? (v) => controller.setValue(config.key, v)
+          onChanged: config.enabled && !config.readOnly
+              ? (v) {
+                  controller.setValue(config.key, v);
+                  config.onChanged?.call(v);
+                }
               : null,
         ),
       ],
@@ -420,7 +450,7 @@ Widget _fileField(DynamicField config, DynamicFormController controller,
                 labelText: config.label,
                 hintText: config.hint ?? 'Tap to select file',
               ),
-      onTap: config.enabled
+      onTap: config.enabled && !config.readOnly
           ? () async {
               if (config.customData != null &&
                   config.customData!['onFilePick'] != null) {
@@ -428,6 +458,7 @@ Widget _fileField(DynamicField config, DynamicFormController controller,
                 final result = await callback();
                 if (result != null) {
                   controller.setValue(config.key, result);
+                  config.onChanged?.call(result);
                 }
               }
             }
@@ -464,9 +495,61 @@ Widget _phoneField(DynamicField config, DynamicFormController controller,
                   suffix: config.suffix)
               .copyWith(labelText: config.label, hintText: config.hint),
       enabled: config.enabled,
+      readOnly: config.readOnly,
+      autofillHints: config.autofillHints,
       keyboardType: TextInputType.phone,
       validator: _validatorFromConfig(config),
-      onChanged: (v) => controller.setValue(config.key, v),
+      onChanged: (v) {
+        controller.setValue(config.key, v);
+        config.onChanged?.call(v);
+      },
+    ),
+  );
+}
+
+Widget _multiSelectField(DynamicField config, DynamicFormController controller,
+    DynamicFormTheme theme) {
+  final current = controller.getValue(config.key);
+  final List<String> selected = current is List
+      ? current.map((e) => e.toString()).toList()
+      : (current != null ? [current.toString()] : []);
+
+  return Padding(
+    padding: theme.fieldPadding ?? const EdgeInsets.only(bottom: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (config.label != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              config.label!,
+              style: theme.labelStyle ??
+                  Theme.of(ThemeProvider.context).textTheme.titleMedium,
+            ),
+          ),
+        Wrap(
+          spacing: 8.0,
+          children: (config.options ?? []).map((o) {
+            final isSelected = selected.contains(o.value);
+            return FilterChip(
+              label: Text(o.label),
+              selected: isSelected,
+              onSelected: config.enabled && !config.readOnly
+                  ? (val) {
+                      if (val) {
+                        selected.add(o.value);
+                      } else {
+                        selected.remove(o.value);
+                      }
+                      controller.setValue(config.key, List<String>.from(selected));
+                      config.onChanged?.call(selected);
+                    }
+                  : null,
+            );
+          }).toList(),
+        ),
+      ],
     ),
   );
 }

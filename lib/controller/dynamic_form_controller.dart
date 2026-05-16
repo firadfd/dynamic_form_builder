@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../utils/validators.dart' show registerCustomValidator;
 
@@ -9,6 +10,11 @@ class DynamicFormController extends ChangeNotifier {
   final Map<String, dynamic> _values = {};
   final Map<String, String?> _errors = {};
   final Map<String, List<VoidCallback>> _listeners = {};
+  final StreamController<Map<String, dynamic>> _valueStreamController =
+      StreamController<Map<String, dynamic>>.broadcast();
+
+  /// A stream that emits the current form data whenever a value changes.
+  Stream<Map<String, dynamic>> get valueStream => _valueStreamController.stream;
 
   /// Updates the value of a specific field and notifies listeners.
   void setValue(String key, dynamic value) {
@@ -17,6 +23,7 @@ class DynamicFormController extends ChangeNotifier {
       _errors.remove(key);
       notifyListeners();
       _listeners[key]?.forEach((cb) => cb());
+      _valueStreamController.add(formData);
     }
   }
 
@@ -63,6 +70,7 @@ class DynamicFormController extends ChangeNotifier {
     _errors.clear();
     formKey.currentState?.reset();
     notifyListeners();
+    _valueStreamController.add(formData);
   }
 
   /// Registers a custom validation function globally.
@@ -73,6 +81,7 @@ class DynamicFormController extends ChangeNotifier {
   @override
   void dispose() {
     _listeners.clear();
+    _valueStreamController.close();
     super.dispose();
   }
 }

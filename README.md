@@ -149,7 +149,7 @@ class LoginScreen extends StatelessWidget {
 | Property          | Description                                                        |
 |-------------------|--------------------------------------------------------------------|
 | `key`             | Unique field identifier                                            |
-| `type`            | One of `FieldType` (text, email, password, number, ...)            |
+| `type`            | One of `FieldType` (text, email, password, number, group, multiSelect, ...) |
 | `label` / `hint`  | Display text                                                       |
 | `validation`      | Built‑in rules (`required`, `minLength`, `regex`, …)               |
 | `validator`       | Custom validation callback, similar to `TextFormField`             |
@@ -157,9 +157,13 @@ class LoginScreen extends StatelessWidget {
 | `activeColor`     | Custom color for Checkbox when active                             |
 | `activeThumbColor`| Custom color for Switch thumb when active                        |
 | `checkColor`      | Custom color for Checkbox tick                                     |
-| `options`         | For `dropdown` fields                                              |
+| `options`         | For `dropdown`, `radio`, or `multiSelect` fields                                              |
 | `conditional`     | Show/hide based on other field value (complex)                     |
 | `visibleIf`       | Show/hide based on other field value (simple map)                  |
+| `readOnly`        | Makes the field read-only                                          |
+| `onChanged`       | Callback triggered when the field value changes                    |
+| `autofillHints`   | Autofill hints for the OS keyboard                                 |
+| `fields`          | Nested fields, used when `type` is `FieldType.group`               |
 | `decorationOverride` | Override `InputDecoration` using type-safe `FieldDecorationOverride`|
 | `decoration`      | Custom `InputDecoration` parameter                                 |
 | `style`           | Custom `TextStyle` parameter                                       |
@@ -273,10 +277,15 @@ DynamicField(
 )
 ```
 
-### 8. Reactive `DynamicFormController` & Form Lifecycle
+### 9. Reactive `DynamicFormController` & Form Lifecycle
 Grab the controller to read values, reset the form, or trigger validation programmatically:
 ```dart
 final controller = DynamicFormController();
+
+// Listen to the live form value stream!
+controller.valueStream.listen((Map<String, dynamic> values) {
+  print('Form updated: $values');
+});
 
 // Validate whole form
 if (controller.validate()) {
@@ -293,7 +302,19 @@ if (data != null) {
 controller.reset();
 ```
 
-### 9. Multi-Step Forms (Stepper)
+### 10. Pre-populating Forms (`initialValues`)
+If you're building an edit form, pass `initialValues` directly to the `DynamicForm` widget to pre-fill the fields.
+```dart
+DynamicForm(
+  config: config,
+  initialValues: {
+    'name': 'John Doe',
+    'country': 'us',
+  },
+)
+```
+
+### 11. Multi-Step Forms (Stepper)
 Break down complex forms into a native `Stepper` seamlessly:
 ```dart
 final steps = [
@@ -317,7 +338,7 @@ DynamicStepperForm(
 )
 ```
 
-### 10. JSON Serialization
+### 12. JSON Serialization
 Fetch JSON directly from your API and render forms without writing any mapping code:
 ```dart
 final jsonFromServer = [
@@ -335,9 +356,9 @@ DynamicFieldBuilder( // (Alias for DynamicForm)
 ---
 
 ## 📚 Full API reference
-- **`DynamicForm`** (or **`DynamicFieldBuilder`**) – The main widget.
+- **`DynamicForm`** (or **`DynamicFieldBuilder`**) – The main widget (supports `initialValues`).
 - **`DynamicStepperForm`** – The multi-step form widget.
-- **`DynamicFormController`** – State & validation.
+- **`DynamicFormController`** – State & validation (with `valueStream`).
 - **`DynamicFormTheme`** – Global appearance.
 - **`DynamicField`** / **`DynamicStep`** / **`FieldType`** / **`Conditional`** / **`DropdownOption`** – Data models.
 

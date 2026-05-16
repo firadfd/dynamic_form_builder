@@ -33,6 +33,18 @@ class DynamicField {
   /// Whether the input text should be obscured (e.g., for password fields).
   final bool obscured;
 
+  /// Whether the field is read-only.
+  final bool readOnly;
+
+  /// Callback when the field value changes.
+  final void Function(dynamic)? onChanged;
+
+  /// Autofill hints for the field.
+  final Iterable<String>? autofillHints;
+
+  /// Nested fields, used when type is FieldType.group.
+  final List<DynamicField>? fields;
+
   /// List of options for fields that require selection (like dropdown).
   final List<DropdownOption>? options;
 
@@ -89,6 +101,10 @@ class DynamicField {
     this.initialValue,
     this.enabled = true,
     this.obscured = false,
+    this.readOnly = false,
+    this.onChanged,
+    this.autofillHints,
+    this.fields,
     this.options,
     this.conditional,
     this.visibleIf,
@@ -110,13 +126,21 @@ class DynamicField {
   factory DynamicField.fromJson(Map<String, dynamic> json) {
     return DynamicField(
       key: (json['key'] ?? json['id']) as String,
-      type: FieldType.values.byName(json['type'] as String),
+      type: FieldType.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => FieldType.text,
+      ),
       label: json['label'] as String?,
       hint: json['hint'] as String?,
       validation: json['validation'] as Map<String, dynamic>?,
       initialValue: json['initialValue'],
       enabled: json['enabled'] as bool? ?? true,
       obscured: json['obscured'] as bool? ?? false,
+      readOnly: json['readOnly'] as bool? ?? false,
+      autofillHints: (json['autofillHints'] as List<dynamic>?)?.cast<String>(),
+      fields: (json['fields'] as List<dynamic>?)
+          ?.map((e) => DynamicField.fromJson(e as Map<String, dynamic>))
+          .toList(),
       options: (json['options'] as List<dynamic>?)
           ?.map((e) => DropdownOption.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -143,6 +167,9 @@ class DynamicField {
         if (initialValue != null) 'initialValue': initialValue,
         'enabled': enabled,
         'obscured': obscured,
+        'readOnly': readOnly,
+        if (autofillHints != null) 'autofillHints': autofillHints!.toList(),
+        if (fields != null) 'fields': fields!.map((f) => f.toJson()).toList(),
         if (options != null)
           'options': options!.map((o) => o.toJson()).toList(),
         if (conditional != null) 'conditional': conditional!.toJson(),

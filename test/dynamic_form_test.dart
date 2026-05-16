@@ -29,8 +29,27 @@ void main() {
       ),
       const DynamicField(key: 'slider_field', type: FieldType.slider, label: 'Slider Field'),
       const DynamicField(key: 'file_field', type: FieldType.file, label: 'File Field'),
-      const DynamicField(key: 'phone_field', type: FieldType.phone, label: 'Phone Field'),
+      const DynamicField(key: 'phone_field', type: FieldType.phone, label: 'Phone Field', readOnly: true),
+      const DynamicField(
+        key: 'multi_field',
+        type: FieldType.multiSelect,
+        label: 'Multi Select Field',
+        options: [DropdownOption(value: 'b', label: 'Option B')],
+      ),
+      const DynamicField(
+        key: 'group_field',
+        type: FieldType.group,
+        label: 'Group Label',
+        fields: [
+          DynamicField(key: 'nested_text', type: FieldType.text, label: 'Nested Text'),
+        ],
+      ),
     ];
+
+    Map<String, dynamic>? lastStreamValue;
+    controller.valueStream.listen((val) {
+      lastStreamValue = val;
+    });
 
     await tester.pumpWidget(
       MaterialApp(
@@ -40,6 +59,7 @@ void main() {
             child: DynamicForm(
               config: config,
               controller: controller,
+              initialValues: const {'text_field': 'Init Text'},
             ),
           ),
         ),
@@ -62,5 +82,16 @@ void main() {
     expect(find.textContaining('Slider Field'), findsOneWidget);
     expect(find.text('File Field'), findsOneWidget);
     expect(find.text('Phone Field'), findsOneWidget);
+    expect(find.text('Multi Select Field'), findsOneWidget);
+    expect(find.text('Option B'), findsOneWidget);
+    expect(find.text('Group Label'), findsOneWidget);
+    expect(find.text('Nested Text'), findsOneWidget);
+
+    expect(controller.getValue('text_field'), 'Init Text');
+    
+    // Test stream and onChanged
+    controller.setValue('email_field', 'test@test.com');
+    await tester.pumpAndSettle();
+    expect(lastStreamValue?['email_field'], 'test@test.com');
   });
 }
